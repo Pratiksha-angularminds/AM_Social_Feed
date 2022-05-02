@@ -12,7 +12,14 @@ const userSchema = new Schema({
         lowercase: true,
         validate: [emailValidator, 'incorrect mail format']
     },
-    password: { type: String, required: true,validate:[passwordValidator,'password must be minimum of 6 characters including 1 sysmbol and 1 number']}
+    password: { type: String, required: true,validate:[passwordValidator,'password must be minimum of 6 characters including 1 sysmbol and 1 number']},
+
+    userName : { type:String },
+    bio : { type:String },
+    gender : { type:String },
+    dob : { type:Date },
+    mobile : { type:String},
+    photo : { type:String}
 });
 
 function emailValidator(value)

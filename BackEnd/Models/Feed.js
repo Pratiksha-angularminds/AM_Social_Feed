@@ -5,6 +5,8 @@ const Schema = mongoose.Schema;
 const feedSchema = new Schema({
     photo:{ type:String , required:true },
     caption:{ type:String , required:true },
+    like:{type:Boolean},
+    comments:{type:Array ,default:[]},
     createdBy: { type: Schema.Types.ObjectId, ref: 'user' },
     createdOn: { type: Date, default: Date.now }
 })

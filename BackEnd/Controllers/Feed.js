@@ -4,6 +4,7 @@ const Feed = require('../Models/Feed')
 //------------------------------FOR GETTING ALL FEEDS--------------------------------
 exports.getAllFeeds = async (req, resp, next) => {
     const feeds = await Feed.find({ createdBy: req.user.id });
+    // console.log(feeds);
     resp.status(200).json(feeds);
 }
 
@@ -11,9 +12,14 @@ exports.getAllFeeds = async (req, resp, next) => {
 
 exports.postFeed = async(req,resp,next) =>
 {
-    const newFeed = new Feed({photo:req.file.filename,caption:req.body.caption})
+    
+    const newFeed = new Feed({
+                                photo:req.file.path , 
+                                caption:req.body.caption , 
+                                like:req.body.like , 
+                            })
     newFeed.createdBy = req.user.id
-    console.log(req.user.id);
+    // console.log(req.user.id);
 
     try {
         const feed = await newFeed.save();
@@ -24,3 +30,4 @@ exports.postFeed = async(req,resp,next) =>
     }
     // resp.send('uploaded')
 }
+
