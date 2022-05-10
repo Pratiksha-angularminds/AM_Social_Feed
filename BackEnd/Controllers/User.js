@@ -26,19 +26,31 @@ exports.signup = async (req,resp,next) =>
 
 
 //--------------------------------------LOGIN USER-------------------------------------
-exports.login = async (req, res, next) => {
+exports.login = async (req, resp, next) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     
     if (!user)
-        return res.status(403).json({ error: { message: 'invalid email/password' } });
+        return resp.status(403).json({ error: { message: 'Invalid email' } });
     const isValid = await user.isPasswordValid(password);
     if (!isValid)
-        return res.status(403).json({ error: { message: 'invalid email/password' } });
+        return resp.status(403).json({ error: { message: 'Invalid password' } });
     const token = getSignedToken(user);
-    res.status(200).json({user,token});
+    resp.status(200).json({user,token});
 };
 
+
+//--------------------------------------GET USER BY ID----------------------------------
+exports.getUserById = async (req, resp, next) => {
+    const { userId } = req.params;
+    try {
+        const user = await User.findById(userId);
+        resp.status(200).json(user);
+    } catch (error) {
+        resp.status(400).json({message:error.message})
+        next(error);
+    }
+};
 
 //------------------------------------- CHANGE PASSWORD---------------------------------
 exports.changePassword = async(req,resp,next) => {
@@ -100,7 +112,7 @@ exports.editProfile = async(req,resp,next) =>
                                                 photo:req.file.path});
         resp.status(200).json({ success: true });
     } catch (error) {
-        error.status = 400;
+        resp.status(400).json({message:error.message})
         next(error);
     }
 }

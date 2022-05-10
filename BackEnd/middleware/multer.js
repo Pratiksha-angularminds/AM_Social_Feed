@@ -7,7 +7,7 @@ const Storage = multer.diskStorage({
         cb(null, './Images');
     },
     filename: (req, file, cb) => {
-        console.log(file)
+        // console.log(file)
         const fileName = new Date().toISOString() + file.originalname
         cb(null, fileName)
     }

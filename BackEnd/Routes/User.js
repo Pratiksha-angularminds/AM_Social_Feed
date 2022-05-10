@@ -8,7 +8,7 @@ const feedControllers = require('../Controllers/Feed')
 const userControllers = require('../Controllers/User')
 
 
-
+router.get('/getUser/:userId',userControllers.getUserById)
 router.post('/sign-up',userControllers.signup)
 router.post('/login',userControllers.login)
 router.post('/change-password', auth , userControllers.changePassword)
