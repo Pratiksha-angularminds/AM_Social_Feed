@@ -8,7 +8,7 @@ exports.getAllFeeds = async (req, resp, next) => {
 }
 
 
-//---------------------------------FOR POSTING FEED BY ID------------------------------
+//---------------------------------FOR POSTING FEED ------------------------------
 exports.postFeed = async(req,resp,next) =>
 {
     

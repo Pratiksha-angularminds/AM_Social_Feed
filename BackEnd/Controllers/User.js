@@ -1,7 +1,15 @@
 const User = require('../Models/User')
 const jwt = require('jsonwebtoken')
 const {SECRET_KEY} = require('./../config')
+const {GOOGLE_CLIENT_ID} = require('./../config')
 const bcrypt = require('bcryptjs');
+const { OAuth2Client } = require("google-auth-library");
+
+
+const client = new OAuth2Client({
+  clientId: `${process.env.GOOGLE_CLIENT_ID}`,
+});
+
 
 //---------------------------------------REGISTER USER------------------------------------
 exports.signup = async (req,resp,next) =>
@@ -38,6 +46,57 @@ exports.login = async (req, resp, next) => {
     const token = getSignedToken(user);
     resp.status(200).json({user,token});
 };
+
+//--------------------------------------GOOGLE LOGIN------------------------------------
+exports.googleLogin = async (req, res, next) => 
+{
+    const { idToken } = req.body;
+    const ticket = await client.verifyIdToken({
+      idToken: idToken,
+      requiredAudience: `${process.env.GOOGLE_CLIENT_ID}`,
+    });
+    const payload = ticket.getPayload();
+    // console.log(payload)
+
+    try 
+    {
+        let user = await User.findOne({ email: payload.email });
+        console.log(user);
+        if (!user) 
+        {
+            return res.status(400).send({
+            Error: true,
+            message: "User not registered! Please sign up to continue",
+            })
+        } 
+        else 
+        {
+            const token = jwt.sign(
+            {
+                _id: user._id,
+                email: user.email,
+                name: user.name,
+            },
+            SECRET_KEY,
+            {
+                expiresIn: "10h",
+            })
+
+            return res.status(200).json({
+            user: {
+                _id: user._id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+            },
+            token,
+            })
+        }
+    } catch (err) {
+      console.log(err);
+      return res.status(401).send(` ${err}`);
+    }
+  }
 
 
 //--------------------------------------GET USER BY ID----------------------------------
