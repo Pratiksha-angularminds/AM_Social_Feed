@@ -5,6 +5,7 @@ import {useNavigate} from 'react-router-dom'
 import axios from 'axios'
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import { validateDate } from '@mui/x-date-pickers/internals/hooks/validation/useDateValidation';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -15,6 +16,7 @@ function Login() {
     // let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNmY2ZWMxMzEwNTk5MjhhMTFmNGIzNiIsImVtYWlsIjoiYWFhYUBhYS5pbiIsImlhdCI6MTY1MTQ3MDAxNywiZXhwIjoxNjUxNDczNjE3fQ.6YNI9LdbSw3d3_aXxFyRZoVEwu11cvWtOR5XAXJkuiE"
     const [email,setEmail] = useState()
     const [password,setPassword] = useState()
+    const [errors,setErrors]=useState({email:'',password:''})
     const [token,setToken] = useState()
     const [open, setOpen] = useState(false);
 
@@ -28,7 +30,18 @@ function Login() {
       }
       setOpen(false);
     };
+const validate=()=>{
+  let flag=false
+if(email === ''){
+  setErrors((prevState)=> errors={...prevState.error,email:"Enter E"})
+}
 
+  if(flag){
+    return true
+  }else{
+    return false
+  }
+}
     // useEffect(() => {
     //     axios.post('http://192.168.0.22:5000/login',{email:"aaaa@aa.in",password:"ssssss@123"},{headers:{token:token}})
     //     .then((response) => {
@@ -45,14 +58,18 @@ function Login() {
             email : email,
             password : password
         }
-        await axios.post('http://localhost:8080/api/auth/login',loginData)
-        .then((response) => {
-            console.log(response);
-            setToken(response.data.accessToken);
-            localStorage.setItem("token",JSON.stringify(`Bearer ${response.data.accessToken}`));
-            localStorage.setItem("userData",JSON.stringify(response.data.user))
-          })
-          setOpen(true);
+
+        // if(validate()){
+          await axios.post('http://192.168.0.22:5000/login',loginData)
+          .then((response) => {
+              console.log(response);
+              setToken(response.data.accessToken);
+              localStorage.setItem("token",JSON.stringify(`Bearer ${response.data.accessToken}`));
+              localStorage.setItem("userData",JSON.stringify(response.data.user))
+            })
+            setOpen(true);
+        // }
+        // 
         //   let temp = localStorage.getItem("token");
         //     if(temp == ""){
         //         console.log("local set");
@@ -163,7 +180,7 @@ function Login() {
                     horizontal: 'right',
                   }}
                 open={open} 
-                autoHideDuration={6000} 
+                autoHideDuration={6000}
                 onClose={handleClose}
                 >
                     <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>

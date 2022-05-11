@@ -50,15 +50,15 @@ function UploadFeed(props) {
     setToken(temp1)
     let temp2 = JSON.parse(localStorage.getItem("userData"))
     setUserId(temp2._id)
-    console.log(temp2);
+    // console.log(temp2);
   }, [])
   
 
   const Post = () => {
-    console.log(token);
-    console.log(userInfo.file);
+    // console.log(token);
+    // console.log(userInfo.file);
     const formdata = new FormData();
-    formdata.append('image', userInfo.file);
+    formdata.append('photo', userInfo.file);
     formdata.append('desc',caption)
     formdata.append('userId',userId)
 

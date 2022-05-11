@@ -51,13 +51,13 @@ function SignUp() {
 
     const SignUpButton = async () => {
         let temp = {
-            firstname : firstName,
-            lastname : lastName,
+            firstName : firstName,
+            lastName : lastName,
             email : email,
             password : password,
-            isAdmin : true
+            
         }
-        await axios.post('http://localhost:8080/api/auth/register', temp)
+        await axios.post('http://192.168.0.22:5000/sign-up', temp)
         setSignUpData(temp)
         console.log(temp);
         if(validPassword){

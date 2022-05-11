@@ -44,6 +44,7 @@ exports.login = async (req, resp, next) => {
     if (!isValid)
         return resp.status(403).json({ error: { message: 'Invalid password' } });
     const token = getSignedToken(user);
+  
     resp.status(200).json({user,token});
 };
 
@@ -98,9 +99,17 @@ exports.googleLogin = async (req, res, next) =>
     }
   }
 
+//-----------------------------------GET ALL USER----------------------------------
+exports.getAllUser = async(req,resp,next) => 
+{
+    const users = await User.find();
+    resp.status(200).json(users);
+}
+
 
 //--------------------------------------GET USER BY ID----------------------------------
-exports.getUserById = async (req, resp, next) => {
+exports.getUserById = async (req, resp, next) => 
+{
     const { userId } = req.params;
     try {
         const user = await User.findById(userId);
@@ -112,12 +121,13 @@ exports.getUserById = async (req, resp, next) => {
 };
 
 //------------------------------------- CHANGE PASSWORD---------------------------------
-exports.changePassword = async(req,resp,next) => {
+exports.changePassword = async(req,resp,next) => 
+{
     let format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/
     
     const {oldPassword , newPassword , confirmPassword} = req.body
     const Current_user = req.user
-    console.log(req.user);
+    // console.log(req.user);
     if(bcrypt.compareSync(oldPassword,Current_user.password))
     {
         if(newPassword == confirmPassword)
@@ -160,7 +170,7 @@ exports.changePassword = async(req,resp,next) => {
 exports.editProfile = async(req,resp,next) =>
 {
     let {userID} = req.params
-    console.log(userID);
+    // console.log(userID);
     try {
         await User.findByIdAndUpdate(userID, {  
                                                 userName:req.body.userName ,
@@ -168,8 +178,11 @@ exports.editProfile = async(req,resp,next) =>
                                                 gender:req.body.gender ,
                                                 dob : req.body.dob ,
                                                 mobile : req.body.mobile ,
-                                                photo:req.file.path});
-        resp.status(200).json({ success: true });
+                                                profilePicture:req.file.path});
+
+        const user = await User.findById(userID)
+        console.log(user)
+        resp.status(200).json({ success: true,user });
     } catch (error) {
         resp.status(400).json({message:error.message})
         next(error);
@@ -179,10 +192,12 @@ exports.editProfile = async(req,resp,next) =>
 
 getSignedToken = user => {
     return jwt.sign({
-        id: user._id,
+        _id: user._id,
         email: user.email,
         name:user.name,
-        password:user.password
+        password:user.password,
+        userName:user.userName || "",
+        profilePicture:user.profilePicture
     },SECRET_KEY, { expiresIn: '24h' });
 };
 

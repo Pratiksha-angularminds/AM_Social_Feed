@@ -7,20 +7,24 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate
+  Navigate,
+  useLocation
 } from "react-router-dom";
 import UploadFeed from './Components/UploadFeed';
+import Edit from './Components/Edit';
 
 function App() {
+  // let path = useLocation
   return (
     <Router>
-      <Navbar />
+      {/* <Navbar /> */}
       <Routes>
         <Route exact path="*" element={<Navigate to="/login" />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/login" element={<Login />}/>
+        <Route path="/sign-up" element={<SignUp />}/>
         <Route path="/feed" element={<Feed />} />
-        <Route path="/upload" element={<UploadFeed />} />
+        <Route path="/upload" element={<UploadFeed />}/>
+        <Route path="/edit-profile" element={<Edit />}/>
       </Routes>
     </Router>
   );

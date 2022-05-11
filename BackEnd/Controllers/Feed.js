@@ -17,7 +17,7 @@ exports.postFeed = async(req,resp,next) =>
                                 caption:req.body.caption , 
                                 like:req.body.like , 
                             })
-    newFeed.createdBy = req.user.id
+    newFeed.createdBy = req.user._id
 
     try {
         const feed = await newFeed.save();

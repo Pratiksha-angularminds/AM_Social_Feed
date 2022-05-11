@@ -9,10 +9,11 @@ const userControllers = require('../Controllers/User')
 
 
 router.get('/getUser/:userId',userControllers.getUserById)
+router.get('/getAllUser',userControllers.getAllUser)
 router.post('/sign-up',userControllers.signup)
 router.post('/login',userControllers.login)
 router.post('/googleLogin',userControllers.googleLogin)
 router.post('/change-password', auth , userControllers.changePassword)
-router.put('/edit-profile/:userID', auth , upload.single('photo') , userControllers.editProfile )
+router.put('/edit-profile/:userID', auth , upload.single('profilePicture') , userControllers.editProfile )
 
 module.exports = router 

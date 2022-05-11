@@ -19,7 +19,7 @@ const userSchema = new Schema({
     gender : { type:String },
     dob : { type:Date },
     mobile : { type:String},
-    photo : { type:String}
+    profilePicture : { type:String}
 });
 
 function emailValidator(value)

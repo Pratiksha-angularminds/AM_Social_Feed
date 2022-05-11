@@ -40,17 +40,22 @@ const style = {
 
 const Navbar = () => {
 
-    const [userName,setUserName] = useState()
+    // const [userName,setUserName] = useState()
     const [userId, setUserId] = useState()
+    const [CurrentUser,setCurrentUser] = useState(JSON.parse(localStorage.getItem('userData')))
     const [profilePicture, setProfilePicture] = useState(null)
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const show = Boolean(anchorEl);
-    const handleClick = (event) => {
-      setAnchorEl(event.currentTarget);
-    };
-    const handleCloseMenu = () => {
+    const [anchorEl, setAnchorEl] = React.useState(null)
+
+    const show = Boolean(anchorEl)
+    const handleClick = (event) => 
+    {
+      setAnchorEl(event.currentTarget)
+    }
+
+    const handleCloseMenu = () => 
+    {
       setAnchorEl(null);
-    };
+    }
 
     let navigate = useNavigate()
 
@@ -78,29 +83,33 @@ const Navbar = () => {
 
     const [token, setToken] = useState()
 
-    useEffect(() => {
-        let temp = localStorage.getItem("token");
-        setToken(temp)
+    // useEffect(() => {
+    //     let temp = localStorage.getItem("token");
+    //     setToken(temp)
 
-        let temp1 = JSON.parse(localStorage.getItem("userData"))
-        if(temp1.profilePicture){
-            setProfilePicture(temp1.profilePicture)
-        }
-        else{
-        let firstName = temp1.firstname[0]
-        let lastName = temp1?temp1.lastname[0]:""
-        setUserName(firstName+lastName)
-        }
-        setUserId(temp1._id)
-    },[])
+    //     let temp1 = JSON.parse(localStorage.getItem("userData"))
+    //     if(temp1.profilePicture)
+    //     {
+    //         setProfilePicture(temp1.profilePicture)
+    //     }
+    //     else
+    //     {
+            
+    //         let firstName = temp1.firstname
+    //         let lastName = temp1?temp1.lastname:""
+    //         setUserName(firstName+lastName)
+    //     }
+    //     setUserId(temp1._id)
+       
+    // },[])
+    // console.log(userName)
 
     const changePassword = async() => {
-        let url = `http://localhost:8080/api/users/${userId}`
+        let url = `http://192.168.0.22:5000/change-password/${userId}`
         let response = await axios.put(url, {password:currentPassword,newPassword:confirmPassword,userId:userId},{
             headers: {Authorization:JSON.parse(token)}
             })
             setOpen(false)
-            // console.log(response);
     }
 
     const Logout = () => {
@@ -108,7 +117,7 @@ const Navbar = () => {
         navigate('/login')
     }
     
-    console.log(profilePicture);
+   
 
     return (
         <AppBar position="fixed" sx={{ bgcolor: "light-blue", mb:4 }}>
@@ -126,24 +135,38 @@ const Navbar = () => {
                             AM Social Feed
                         </Typography>
                     </Link>
-                    <Stack direction="row" spacing={2}>
-                        {profilePicture?
+                    <Stack direction="row" spacing={2} >
+                        {/* {profilePicture?
                         <Avatar 
                         height="50"
                         sx={{ml:158}}
                         alt="Profile Picture" 
-                        src={profilePicture}
+                        src={profilePicture && ""}
                         onClick={handleClick}
                         />:
-                        <Avatar
-                        sx={{bgcolor:deepOrange[500],ml:158}}
-                        aria-controls={show ? 'basic-menu' : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={show ? 'true' : undefined}
-                        onClick={handleClick}
-                        >
-                        {userName}
-                        </Avatar>}
+                            <Avatar
+                            sx={{bgcolor:deepOrange[500],ml:158}}
+                            aria-controls={show ? 'basic-menu' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={show ? 'true' : undefined}
+                            onClick={handleClick}
+                            >
+                    
+                        </Avatar>} */}
+                        <div style={{display:"flex"}}>
+                            <Avatar
+                                size="large"
+                                sx={{bgcolor:deepOrange[500],ml:98}}
+                                aria-label="account of current user"
+                                aria-controls="menu-appbar"
+                                aria-haspopup="true"
+                                onClick={handleClick}
+                                color="inherit"
+                                src={`http://192.168.0.22:5000/${CurrentUser.profilePicture}`}
+                            >
+                            </Avatar>
+                            <a style={{margin:'10px 10px'}}>{CurrentUser.firstName}{' '}{CurrentUser.lastName}</a>
+                        </div>
                     </Stack>
                     <Menu
                         id="basic-menu"
