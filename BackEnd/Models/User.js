@@ -19,7 +19,8 @@ const userSchema = new Schema({
     gender : { type:String },
     dob : { type:Date },
     mobile : { type:String},
-    profilePicture : { type:String}
+    profilePicture : { type:String},
+    removeImg : {type:Boolean,default:false}
 });
 
 function emailValidator(value)

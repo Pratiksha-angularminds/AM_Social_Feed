@@ -96,14 +96,14 @@ exports.putLikes = async(req,resp,next) =>
 exports.getFeeds = async(req,resp,next) =>
 {
     const {page,limit} = req.query
-
+    const mysort = {createdOn:-1}
     try
     {
-        const feeds = await Feed.find().limit(limit*1).skip((page-1)*limit)
+        const feeds = await Feed.find().sort(mysort).limit(limit*1).skip((page-1)*limit)
         resp.status(200).json({total:feeds.length,feeds})
     } catch (err) {
         resp.status(500).json({message:err.message})
-        console.log("hi2")
+       
     }
 }
 

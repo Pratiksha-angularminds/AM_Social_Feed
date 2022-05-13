@@ -173,18 +173,25 @@ exports.editProfile = async(req,resp,next) =>
     const user1 = await User.findById({ _id: current_user._id });
     // console.log(userID);
     try {
-        
-        await User.findByIdAndUpdate(userID, {  
-                                                userName:req.body.userName ,
-                                                bio:req.body.bio ,
-                                                gender:req.body.gender ,
-                                                dob : req.body.dob ,
-                                                mobile : req.body.mobile ,
-                                                profilePicture: req.file ? req.file.path : user1.profilePicture});
+        if(req.removeImg === true)
+        {
+            await User.findByIdAndUpdate(userID,{...req.body,profilePicture:""})
+        }
+        else
+        {
+            await User.findByIdAndUpdate(userID, {  
+                                                    userName:req.body.userName ,
+                                                    bio:req.body.bio ,
+                                                    gender:req.body.gender ,
+                                                    dob : req.body.dob ,
+                                                    mobile : req.body.mobile ,
+                                                    profilePicture: req.file ? req.file.path : user1.profilePicture});
 
-        const user = await User.findById(userID)
-        console.log(user)
-        resp.status(200).json({ success: true,user });
+            const user = await User.findById(userID)
+            console.log(user)
+            resp.status(200).json({ success: true,user });
+        }
+       
     } catch (error) {
         resp.status(400).json({message:error.message})
         next(error);
