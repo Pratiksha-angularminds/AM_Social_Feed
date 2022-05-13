@@ -170,15 +170,17 @@ exports.changePassword = async(req,resp,next) =>
 exports.editProfile = async(req,resp,next) =>
 {
     let {userID} = req.params
+    const user1 = await User.findById({ _id: current_user._id });
     // console.log(userID);
     try {
+        
         await User.findByIdAndUpdate(userID, {  
                                                 userName:req.body.userName ,
                                                 bio:req.body.bio ,
                                                 gender:req.body.gender ,
                                                 dob : req.body.dob ,
                                                 mobile : req.body.mobile ,
-                                                profilePicture:req.file.path});
+                                                profilePicture: req.file ? req.file.path : user1.profilePicture});
 
         const user = await User.findById(userID)
         console.log(user)
